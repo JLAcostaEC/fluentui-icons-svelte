@@ -9,7 +9,7 @@
 >
 	<BgIcon />
 	<div class="z-10 flex flex-col items-center gap-2">
-		<img src="/sveltefluent.png" alt="Custom SvelteFluent logo" class="w-36 md:w-1/3 lg:w-1/4" />
+		<img src="{base}/sveltefluent.png" alt="Custom SvelteFluent logo" class="w-36 md:w-1/3 lg:w-1/4" />
 		<h1 class="py-4 text-center text-xl leading-none font-bold">
 			{NAME}
 		</h1>
