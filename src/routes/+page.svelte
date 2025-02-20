@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import { BgIcon } from '$internal/components/index.js';
 	import { DESCRIPTION, NAME } from '$internal/constants.js';
 </script>
@@ -20,6 +21,6 @@
 	</div>
 	<div class="xs:gap-8 z-10 flex max-w-96 flex-col items-center gap-4 lg:max-w-xl">
 		<p class="text-center text-base font-semibold">{DESCRIPTION}</p>
-		<a href="/icons" class="rounded-md bg-orange-600 px-4 py-2 text-white">See all icons</a>
+		<a href="{base}/icons" class="rounded-md bg-orange-600 px-4 py-2 text-white">See all icons</a>
 	</div>
 </section>

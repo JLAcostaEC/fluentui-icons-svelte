@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import { page } from '$app/state';
 	import { BgIcon } from '../internal/components/index.js';
 </script>
@@ -14,6 +15,6 @@
 	</div>
 	<div class="xs:gap-8 z-10 flex max-w-96 flex-col items-center gap-4 lg:max-w-xl">
 		<p class="text-center text-xl font-semibold">{page.error?.message}</p>
-		<a href="/" class="rounded-md bg-orange-600 px-4 py-2 text-white">Back To Home</a>
+		<a href="{base}/" class="rounded-md bg-orange-600 px-4 py-2 text-white">Back To Home</a>
 	</div>
 </section>
