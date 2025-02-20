@@ -1,0 +1,26 @@
+@import 'tailwindcss';
+
+@theme {
+	--breakpoint-xs: 32.5rem;
+}
+
+* {
+	font-family:
+		'Segoe UI Variable Text', 'Seoge UI Variable Static Text', 'Segoe UI', 'Selawik',
+		'-apple-system', 'ui-sans-serif', 'system-ui', 'BlinkMacSystemFont', 'Roboto', 'Oxygen-Sans',
+		'Ubuntu', 'Cantarell', 'Helvetica Neue', 'sans-serif';
+}
+
+#app {
+	width: 100%;
+	min-height: 100dvh;
+	height: max-content;
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-template-rows: max-content auto max-content;
+	position: relative;
+}
+svg {
+	width: 100%;
+	height: auto;
+}
