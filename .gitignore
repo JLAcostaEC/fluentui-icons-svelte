@@ -9,6 +9,9 @@ node_modules
 /build
 /dist
 
+# All content is generated at build time, no need to commit src/lib
+/src/lib
+
 # OS
 .DS_Store
 Thumbs.db
