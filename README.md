@@ -1,4 +1,8 @@
-# Fluent UI Icons for Svelte
+<h1 align="center">
+  <img alt="Fluent UI Svelte Logo" src="https://github.com/JLAcostaEC/fluentui-icons-svelte/blob/3166a6fd7fb015f8085b115cf2f9c5298de225e1/static/sveltefluent.png" height="130" style="margin-bottom: 20px"/>
+  <br>
+  Fluent UI Icons for Svelte 5
+</h1>
 
 This repository provides a curated set of **Microsoft’s Fluent UI Icons**, converted into **Svelte 5** components with the help of the [svgtosvelte](https://github.com/JLAcostaEC/svgtosvelte) CLI.
 
