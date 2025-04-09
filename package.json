@@ -28,8 +28,8 @@
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"format": "prettier --write .",
 		"lint": "prettier --check . && eslint .",
-		"generate:package": "svgtosvelte node_modules/@fluentui/svg-icons/icons -t -r -k -f 12 16 20 28 32 48 filled regular -e 24",
-		"generate:static": "svgtosvelte src/internal/icons -t -r -k -e 24",
+		"generate:package": "svgtosvelte node_modules/@fluentui/svg-icons/icons -t -u -r -k -f 12 16 20 28 32 48 filled regular -e 24",
+		"generate:static": "svgtosvelte src/internal/icons -t -u -r -k -e 24",
 		"generate": "pnpm generate:package && pnpm generate:static",
 		"changeset:version": "changeset version && git add --all",
 		"changeset:publish": "changeset publish"
