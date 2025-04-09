@@ -2,7 +2,7 @@
 	"$schema": "https://unpkg.com/@changesets/config@2.3.0/schema.json",
 	"changelog": [
 		"@svitejs/changesets-changelog-github-compact",
-		{ "repo": "fluentui-icons-svelte" }
+		{ "repo": "JLAcostaEC/fluentui-icons-svelte/" }
 	],
 	"commit": false,
 	"fixed": [],
