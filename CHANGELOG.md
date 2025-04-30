@@ -1,5 +1,11 @@
 # fluentui-icons-svelte
 
+## 1.0.2
+
+### Patch Changes
+
+- fix: keep static values of attributes to solve #3 ([`75341af`](https://github.com/JLAcostaEC/fluentui-icons-svelte/commit/75341afae50a57ba19f170d019592ee5b4ce25c6))
+
 ## 1.0.1
 
 ### Patch Changes
