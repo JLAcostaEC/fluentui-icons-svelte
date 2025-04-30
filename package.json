@@ -51,8 +51,12 @@
 			"svelte": "./dist/index.js"
 		},
 		"./*.svelte": {
-			"types": "./dist/icon/*.svelte.d.ts",
-			"import": "./dist/icon/*.svelte"
+			"types": "./dist/*.svelte.d.ts",
+			"import": "./dist/*.svelte"
+		},
+		"./icons/*.svelte": {
+			"types": "./dist/icons/*.svelte.d.ts",
+			"import": "./dist/icons/*.svelte"
 		}
 	},
 	"peerDependencies": {
