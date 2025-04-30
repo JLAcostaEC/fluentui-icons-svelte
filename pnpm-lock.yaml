@@ -21,8 +21,8 @@ importers:
         specifier: ^1.1.274
         version: 1.1.274
       '@jlacostaec/svgtosvelte':
-        specifier: ^1.1.6
-        version: 1.1.6(typescript@5.7.3)
+        specifier: ^1.2.0
+        version: 1.2.0(typescript@5.7.3)
       '@sveltejs/adapter-static':
         specifier: ^3.0.8
         version: 3.0.8(@sveltejs/kit@2.17.2(@sveltejs/vite-plugin-svelte@5.0.3(svelte@5.20.2)(vite@6.1.4(jiti@2.4.2)(lightningcss@1.29.1)))(svelte@5.20.2)(vite@6.1.4(jiti@2.4.2)(lightningcss@1.29.1)))
@@ -368,8 +368,9 @@ packages:
     resolution: {integrity: sha512-xeO57FpIu4p1Ri3Jq/EXq4ClRm86dVF2z/+kvFnyqVYRavTZmaFaUBbWCOuuTh0o/g7DSsk6kc2vrS4Vl5oPOQ==}
     engines: {node: '>=18.18'}
 
-  '@jlacostaec/svgtosvelte@1.1.6':
-    resolution: {integrity: sha512-jErPguUnHKbt8/zGLC9zMr7FxoyspGBrxFNhfa0T2Gz531D3Ml2mmy1AIua0VzMQtjwEKN2Z3PAW1M7k4zNOww==}
+  '@jlacostaec/svgtosvelte@1.2.0':
+    resolution: {integrity: sha512-0e1BB+tif5rsdJJqkrDB9M4L1eVeuS3fuw7YtPMSbZ+XD6RUdpMxmyoyP2d/hcHN9FRh7AHg0uN/UUsYdQF/DA==}
+    engines: {node: '>=18'}
     hasBin: true
 
   '@jridgewell/gen-mapping@0.3.8':
@@ -2017,7 +2018,7 @@ snapshots:
 
   '@humanwhocodes/retry@0.4.2': {}
 
-  '@jlacostaec/svgtosvelte@1.1.6(typescript@5.7.3)':
+  '@jlacostaec/svgtosvelte@1.2.0(typescript@5.7.3)':
     dependencies:
       commander: 13.1.0
       estree-walker: 3.0.3
@@ -2617,7 +2618,7 @@ snapshots:
 
   estree-walker@3.0.3:
     dependencies:
-      '@types/estree': 1.0.6
+      '@types/estree': 1.0.7
 
   esutils@2.0.3: {}
 
