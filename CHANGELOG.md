@@ -1,5 +1,11 @@
 # fluentui-icons-svelte
 
+## 1.0.3
+
+### Patch Changes
+
+- fix: update pkg.json exports ([`e6f3b3c`](https://github.com/JLAcostaEC/fluentui-icons-svelte/commit/e6f3b3cd8d378077181ef31d0c3c91c721c31454))
+
 ## 1.0.2
 
 ### Patch Changes
