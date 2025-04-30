@@ -57,10 +57,22 @@ Import the icon directly for faster compiling during development.
 <AddCircleFilled />
 ```
 
-Customize by passing props like size or color:
+If you are trying to `Direct import` a file that contains the word `server` you must import it as follows:
 
 ```svelte
-<AddCircleFilled size="32" color="#0078D4" />
+<script>
+	import ServerFilled from 'fluentui-icons-svelte/icons/ServerFilled.svelte';
+</script>
+
+<ServerFilled />
+```
+
+This because SvelteKit blocks the import/export of files containing the word "server" inside the "src/lib" folder.
+
+### Customize by passing props like size or color:
+
+```svelte
+<AddCircleFilled width="32" height="32" color="#0078D4" />
 ```
 
 ## Contributing
