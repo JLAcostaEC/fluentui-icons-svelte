@@ -1,5 +1,11 @@
 # fluentui-icons-svelte
 
+## 1.1.0
+
+### Minor Changes
+
+- feat: updated svgtosvelte + new icons ([#6](https://github.com/JLAcostaEC/fluentui-icons-svelte/pull/6))
+
 ## 1.0.3
 
 ### Patch Changes
