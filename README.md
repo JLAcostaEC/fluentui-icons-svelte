@@ -1,6 +1,11 @@
+<p align="center">
+	<picture>
+  		<source media="(prefers-color-scheme: dark)" srcset="https://github.com/JLAcostaEC/fluentui-svelte/blob/main/static/images/banner-white.png?raw=true" height="130" style="margin-bottom: 20px">
+  		<img alt="Fluent UI Svelte Logo" src="https://github.com/JLAcostaEC/fluentui-svelte/blob/main/static/images/banner.png?raw=true" height="130" style="margin-bottom: 20px"/>
+	</picture>
+</p>
+
 <h1 align="center">
-  <img alt="Fluent UI Svelte Logo" src="https://github.com/JLAcostaEC/fluentui-icons-svelte/blob/3166a6fd7fb015f8085b115cf2f9c5298de225e1/static/sveltefluent.png" height="130" style="margin-bottom: 20px"/>
-  <br>
   Fluent UI Icons for Svelte 5
 </h1>
 
@@ -56,18 +61,6 @@ Import the icon directly for faster compiling during development.
 
 <AddCircleFilled />
 ```
-
-If you are trying to `Direct import` a file that contains the word `server` you must import it as follows:
-
-```svelte
-<script>
-	import ServerFilled from 'fluentui-icons-svelte/icons/ServerFilled.svelte';
-</script>
-
-<ServerFilled />
-```
-
-This because SvelteKit blocks the import/export of files containing the word "server" inside the "src/lib" folder.
 
 ### Customize by passing props like size or color:
 
