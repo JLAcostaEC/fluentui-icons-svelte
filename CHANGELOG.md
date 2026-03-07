@@ -1,5 +1,11 @@
 # fluentui-icons-svelte
 
+## 1.1.1
+
+### Patch Changes
+
+- fix: remove unused export ([`4729ef6`](https://github.com/JLAcostaEC/fluentui-icons-svelte/commit/4729ef66b4c7a4e18005bd9baca700fab510690b))
+
 ## 1.1.0
 
 ### Minor Changes
