@@ -1,7 +1,7 @@
 <p align="center">
 	<picture>
-  		<source media="(prefers-color-scheme: dark)" srcset="https://github.com/JLAcostaEC/fluentui-svelte/blob/main/static/images/banner-white.png?raw=true" height="130" style="margin-bottom: 20px">
-  		<img alt="Fluent UI Svelte Logo" src="https://github.com/JLAcostaEC/fluentui-svelte/blob/main/static/images/banner.png?raw=true" height="130" style="margin-bottom: 20px"/>
+  		<source media="(prefers-color-scheme: dark)" srcset="https://github.com/JLAcostaEC/fluentui-icons-svelte/blob/main/static/images/banner-white.png?raw=true" height="130" style="margin-bottom: 20px">
+  		<img alt="Fluent UI Svelte Logo" src="https://github.com/JLAcostaEC/fluentui-icons-svelte/blob/main/static/images/banner.png?raw=true" height="130" style="margin-bottom: 20px"/>
 	</picture>
 </p>
 
