@@ -9,4 +9,4 @@ export const OWNER = {
 	name: 'Microsoft',
 	url: 'https://github.com/microsoft/fluentui-system-icons/tree/main/packages/svg-icons'
 };
-export const REPOSITORY = 'https://github.com/JLAcostaEC/svelte-fluentui-icons';
+export const REPOSITORY = 'https://github.com/JLAcostaEC/fluentui-icons-svelte';
