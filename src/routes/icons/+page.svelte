@@ -1,82 +1,345 @@
 <script lang="ts">
-	import { BgIcon } from '$internal/components/index.js';
-	import { NAME } from '$internal/constants.js';
-	import * as LIB from '$lib/index.js';
-	import type { Component } from 'svelte';
+	import { onMount, untrack } from 'svelte';
+	import { MediaQuery } from 'svelte/reactivity';
+	import {
+		Badge,
+		Button,
+		Card,
+		CardFooter,
+		CardHeader,
+		Dialog,
+		DialogActions,
+		DialogContent,
+		DialogSurface,
+		DialogTitle,
+		InfoBar,
+		ProgressRing,
+		TextBox
+	} from 'fluentui-svelte';
+	import FilterRegular from '#lib/FilterRegular.svelte';
+	import SearchRegular from '#lib/SearchRegular.svelte';
+	import { decodeCatalog } from '#internal/catalog.js';
+	import { Filters, IconDetails, IconGrid } from '#internal/components/index.js';
+	import { DESCRIPTION, NAME } from '#internal/constants.js';
+	import { IconBrowser } from '#internal/icon-browser.svelte.js';
+	import { VARIANTS } from '#internal/types.js';
 
-	const { registry, ...ICONS } = LIB;
-	let search = $state('');
+	let { data } = $props();
 
-	const ENTRIES = Array.from(Object.entries(ICONS), ([key, value]) => {
-		return {
-			key: registry.find((item) => item.componentName === key)?.cleanName || key,
-			component: value as Component
-		};
+	// The server rendered only the first icons. The full catalog is fetched once, below.
+	const browser = untrack(
+		() =>
+			new IconBrowser(
+				decodeCatalog({ categories: data.categories, rows: data.initial }),
+				data.facets
+			)
+	);
+
+	// Wide screens get the detail panel and the filters beside the grid; smaller ones open them in a dialog.
+	const isWide = new MediaQuery('min-width: 1280px');
+	const isMedium = new MediaQuery('min-width: 768px');
+
+	type DialogHandle = { openDialog(): void; closeDialog(): void };
+	let detailsDialog: DialogHandle | undefined = $state();
+	let filtersDialog: DialogHandle | undefined = $state();
+	let searchInput: HTMLInputElement | undefined = $state();
+
+	const selected = $derived(browser.selected);
+	const siblings = $derived(selected ? browser.siblingsOf(selected) : []);
+	const showDetailsDialog = $derived(selected !== null && !isWide.current);
+
+	/**
+	 * fluentui-svelte closes a dialog on any pointer press outside it: runed's `onClickOutside` fires
+	 * 10ms after `pointerdown` (and, for touch, on the `click` that follows). A quick tap or click
+	 * therefore closes the dialog its own button just opened. Opening one frame later lets that
+	 * handler run first, while the dialog is still closed.
+	 */
+	const CLICK_OUTSIDE_SETTLE_MS = 16;
+	function openSoon(dialog: () => DialogHandle | undefined) {
+		const timer = setTimeout(() => dialog()?.openDialog(), CLICK_OUTSIDE_SETTLE_MS);
+		return () => clearTimeout(timer);
+	}
+
+	$effect(() => {
+		if (showDetailsDialog) return openSoon(() => detailsDialog);
+		detailsDialog?.closeDialog();
+	});
+	$effect(() => {
+		if (isMedium.current) filtersDialog?.closeDialog();
 	});
 
-	const FILTERED_ENTRIES = $derived.by(() =>
-		search.trim().length > 0
-			? ENTRIES.filter(({ key }) =>
-					key.toLowerCase().includes(search.toLowerCase().replace(/(\s+|-)/g, ''))
-				)
-			: ENTRIES
+	const resetKey = $derived(
+		`${browser.term}|${browser.category}|${VARIANTS.map((v) => (browser.variants[v] ? 1 : 0)).join('')}`
 	);
+	const activeFilterCount = $derived(
+		(browser.category === null ? 0 : 1) + (VARIANTS.every((v) => browser.variants[v]) ? 0 : 1)
+	);
+	const shownCount = $derived(browser.results.length);
+
+	// Fetch the full catalog once the first paint is out of the way.
+	onMount(() => {
+		const load = () => void browser.ensureLoaded();
+		if ('requestIdleCallback' in window) {
+			const handle = requestIdleCallback(load, { timeout: 1500 });
+			return () => cancelIdleCallback(handle);
+		}
+		const handle = setTimeout(load, 300);
+		return () => clearTimeout(handle);
+	});
+
+	/** "/" jumps to the search box, as on most documentation sites. */
+	function onKeydown(event: KeyboardEvent) {
+		if (event.key !== '/' || event.ctrlKey || event.metaKey || event.altKey) return;
+		if (
+			(event.target as HTMLElement | null)?.closest('input, textarea, select, [contenteditable]')
+		) {
+			return;
+		}
+		event.preventDefault();
+		searchInput?.focus();
+	}
 </script>
 
-<section
-	class="hero xs:gap-16 xs:justify-start relative flex h-full w-full flex-col items-center justify-between gap-4 px-4 pt-6 pb-14 sm:pb-28 md:gap-28"
->
-	<BgIcon
-		class="xs:opacity-50 absolute top-[6rem] left-0 z-0 w-full -translate-y-[50%] contrast-125 lg:opacity-40 dark:brightness-150"
-	/>
-	<section class="z-10 flex flex-col items-center gap-2">
-		<h1 class="text-center text-3xl leading-none font-bold">{NAME} List</h1>
-		<span
-			class="inline-flex items-center gap-x-1 rounded-full bg-orange-100 px-3 py-1 text-xs font-medium text-orange-800 dark:bg-orange-500/10 dark:text-orange-500"
-		>
-			{ENTRIES.length}
-			{ENTRIES.length > 1 ? 'Icons' : 'Icon'}
-		</span>
-	</section>
-	<section class="z-10 flex w-full max-w-[1400px] flex-col gap-2 md:flex-row md:gap-4">
-		<div
-			class="order-2 flex w-full flex-wrap gap-2 rounded-xl bg-gray-100/70 p-2 backdrop-blur-xs md:order-1 md:w-9/12"
-		>
-			{#if FILTERED_ENTRIES.length > 0}
-				{#each FILTERED_ENTRIES as Icon}
-					<div
-						class="flex w-[calc(100%/4-8px*3/4)] flex-col items-center justify-between gap-2 rounded-lg border border-gray-400/70 p-2 hover:cursor-pointer hover:bg-gray-200 lg:w-[calc(100%/6-8px*5/6)]"
-					>
-						<div class="flex h-8 w-8 items-center justify-center">
-							<Icon.component />
-						</div>
-						<p class="max-w-full text-center text-xs text-wrap">{Icon.key}</p>
-					</div>
-				{/each}
-			{:else}
-				<p class="w-full py-8 text-center text-xl text-red-700">No icons found... 🤷‍♂️</p>
-			{/if}
-		</div>
-		<div
-			class="sticky top-16 z-20 order-1 flex w-full gap-2 self-start rounded-xl bg-gray-100/70 p-4 backdrop-blur-xs md:top-20 md:order-2 md:w-3/12"
-		>
-			<div class="flex w-full flex-col">
-				<label for="price" class="block text-sm/6 font-medium text-gray-900">Search Icon</label>
-				<div class="mt-2 w-full">
-					<div
-						class="flex w-full items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-gray-300 has-[input:focus-within]:outline-2 has-[input:focus-within]:-outline-offset-2 has-[input:focus-within]:outline-indigo-600"
-					>
-						<input
+<svelte:head>
+	<title>Icons · {NAME}</title>
+	<meta name="description" content={DESCRIPTION} />
+</svelte:head>
+
+<svelte:window onkeydown={onKeydown} />
+
+<div class="page viewer">
+	<div class="browser">
+		<aside class="filters" aria-label="Filters">
+			<Filters {browser} />
+		</aside>
+
+		<section class="results" aria-labelledby="results-title">
+			<div class="toolbar">
+				<div class="toolbar-head">
+					<h1 id="results-title" class="results-title">Search in: {browser.category ?? 'All icons'}</h1>
+					<span class="shown" role="status" aria-live="polite">
+						{#if browser.filteringPartial}
+							<ProgressRing size={16} /> Loading all icons…
+						{:else}
+							{shownCount.toLocaleString()}
+							{shownCount === 1 ? 'icon' : 'icons'} shown
+						{/if}
+					</span>
+				</div>
+
+				<div class="toolbar-controls">
+					<div class="search">
+						<TextBox
 							type="search"
-							name="search"
-							id="search"
-							class="block w-full min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
-							placeholder="Alert..."
-							bind:value={search}
-						/>
+							placeholder="Search icons"
+							aria-label="Search icons"
+							bind:ref={searchInput}
+							bind:value={() => browser.query, (value) => browser.setQuery(String(value))}
+						>
+							{#snippet contentBefore()}
+								<SearchRegular width="16" height="16" aria-hidden="true" />
+							{/snippet}
+						</TextBox>
 					</div>
+					<Button
+						class="filters-button"
+						appearance="standard"
+						onclick={() => openSoon(() => filtersDialog)}
+					>
+						<FilterRegular width="20" height="20" aria-hidden="true" />
+						Filters
+						{#if activeFilterCount > 0}
+							<Badge appearance="filled" size={18} color="attention">{activeFilterCount}</Badge>
+						{/if}
+					</Button>
 				</div>
 			</div>
-		</div>
-	</section>
-</section>
+
+			{#if browser.status === 'error'}
+				<InfoBar status="warning" title="Couldn't load the full icon list" hideCloseButton>
+					<p>Only the first {browser.results.length} icons are available right now.</p>
+					<Button appearance="standard" onclick={() => browser.retry()}>Try again</Button>
+				</InfoBar>
+			{/if}
+
+			{#if shownCount > 0}
+				<IconGrid
+					icons={browser.results}
+					selectedName={selected?.name}
+					{resetKey}
+					onselect={(icon) => browser.select(icon)}
+				/>
+			{:else if !browser.filteringPartial}
+				<Card appearance="filled" orientation="vertical">
+					<CardHeader
+						title="No icons found"
+						description="Try a different word, or clear the filters."
+					/>
+					<CardFooter action={resetAction} />
+				</Card>
+			{/if}
+		</section>
+
+		<aside class="details" aria-label="Icon details">
+			{#if selected}
+				<IconDetails icon={selected} {siblings} onselect={(icon) => browser.select(icon)} />
+			{:else}
+				<Card appearance="filled" orientation="vertical">
+					<CardHeader
+						title="Icon details"
+						description="Select an icon to preview it and copy its Svelte code."
+					/>
+				</Card>
+			{/if}
+		</aside>
+	</div>
+</div>
+
+{#snippet resetAction()}
+	<Button appearance="standard" onclick={() => browser.reset()}>Reset filters</Button>
+{/snippet}
+
+<!-- Below 1280px the details open in a dialog; below 768px the filters do too. -->
+<Dialog bind:this={detailsDialog}>
+	<DialogSurface
+		style="min-width: 280px; width: min(32rem, calc(100vw - 2rem)); max-height: calc(100dvh - 1rem); overflow: auto;"
+		onclose={() => !isWide.current && browser.select(null)}
+	>
+		<DialogTitle>{selected?.label ?? 'Icon details'}</DialogTitle>
+		<DialogContent class="details-dialog">
+			{#if selected}
+				<IconDetails subtle icon={selected} {siblings} onselect={(icon) => browser.select(icon)} />
+			{/if}
+		</DialogContent>
+		<DialogActions fluid>
+			<Button style="flex: 1 1 auto;" onclick={() => browser.select(null)}>Close</Button>
+		</DialogActions>
+	</DialogSurface>
+</Dialog>
+
+<Dialog bind:this={filtersDialog}>
+	<DialogSurface
+		style="width: min(26rem, calc(100vw - 1rem)); max-height: calc(100dvh - 1rem); overflow: auto;"
+	>
+		<DialogTitle>Filters</DialogTitle>
+		<DialogContent>
+			<Filters {browser} />
+		</DialogContent>
+		<DialogActions fluid>
+			<Button onclick={() => filtersDialog?.closeDialog()}>
+				Show {shownCount.toLocaleString()} icons
+			</Button>
+		</DialogActions>
+	</DialogSurface>
+</Dialog>
+
+<style>
+	/*
+	 * The page itself never scrolls: it is exactly one screen tall (header + this) and every column
+	 * scrolls on its own. The grid's scroll container lives inside IconGrid.
+	 */
+	:global(html:has(.viewer)) {
+		overflow: hidden;
+	}
+	.page {
+		box-sizing: border-box;
+		height: calc(100dvh - var(--header-height));
+		max-width: 1600px;
+		margin-inline: auto;
+		padding: 16px;
+		overflow: hidden;
+	}
+
+	.browser {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr);
+		grid-template-rows: minmax(0, 1fr);
+		gap: 16px;
+		height: 100%;
+	}
+	.filters,
+	.details {
+		display: none;
+		min-height: 0;
+	}
+	.results {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+		min-width: 0;
+		min-height: 0;
+	}
+
+	.toolbar {
+		flex: none;
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		padding-bottom: 12px;
+		border-bottom: 1px solid var(--fs-divider-stroke-default);
+	}
+	.toolbar-head {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 4px 16px;
+	}
+	.results-title {
+		margin: 0;
+		font-size: var(--fs-subtitle2-font-size);
+		font-weight: 600;
+	}
+	.shown {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		font-size: var(--fs-caption-font-size);
+		color: var(--fs-text-secondary);
+	}
+	.toolbar-controls {
+		display: flex;
+		gap: 8px;
+	}
+	.search {
+		flex: 1;
+		min-width: 0;
+	}
+	.results :global(.filters-button) {
+		flex: none;
+		gap: 8px;
+	}
+	:global(.dialog-content) {
+			padding: 0.5rem !important;
+		}
+
+	/* Tablet: filters sit beside the grid. */
+	@media (min-width: 768px) {
+		:global(.dialog-content) {
+			padding: 0.5rem !important;
+		}
+
+		.browser {
+			grid-template-columns: 15rem minmax(0, 1fr);
+		}
+		.filters {
+			display: block;
+			overflow-y: auto;
+			padding-block: 8px;
+		}
+		.results :global(.filters-button) {
+			display: none;
+		}
+	}
+
+	/* Desktop: the detail panel joins as a third column. */
+	@media (min-width: 1280px) {
+		.browser {
+			grid-template-columns: 15rem minmax(0, 1fr) 22rem;
+		}
+		.details {
+			display: block;
+			overflow-y: auto;
+		}
+	}
+</style>

@@ -2,3 +2,19 @@
 package-lock.json
 pnpm-lock.yaml
 yarn.lock
+bun.lock
+bun.lockb
+
+# Miscellaneous
+/static/
+
+# Cloudflare
+src/worker-configuration.d.ts
+
+# Skills & AI
+.github/skills/*
+.github/agents/*
+
+# Generated files
+propsmith.lock.json
+messages/*.json

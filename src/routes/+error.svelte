@@ -1,20 +1,38 @@
 <script lang="ts">
-	import { base } from '$app/paths';
+	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
-	import { BgIcon } from '../internal/components/index.js';
+	import { Button } from 'fluentui-svelte';
 </script>
 
-<section
-	class="hero xs:justify-center xs:gap-16 xs:pt-0 relative flex h-full w-full flex-col items-center justify-center gap-4 px-4 pt-10 pb-24 md:gap-16"
->
-	<BgIcon />
-	<div class="z-10">
-		<h1 class="text-center text-6xl leading-none font-bold">
-			{page.status}
-		</h1>
-	</div>
-	<div class="xs:gap-8 z-10 flex max-w-96 flex-col items-center gap-4 lg:max-w-xl">
-		<p class="text-center text-xl font-semibold">{page.error?.message}</p>
-		<a href="{base}/" class="rounded-md bg-orange-600 px-4 py-2 text-white">Back To Home</a>
-	</div>
+<section class="error">
+	<h1 class="status">{page.status}</h1>
+	<p class="message">{page.error?.message}</p>
+	<Button as="a" href={resolve('/')}>Back to home</Button>
 </section>
+
+<style>
+	.error {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 16px;
+		min-height: 60dvh;
+		padding: 16px;
+		text-align: center;
+	}
+	.status {
+		margin: 0;
+		font-size: 4rem;
+		font-weight: 600;
+		line-height: 1;
+		color: var(--fs-accent-text-primary);
+	}
+	.message {
+		margin: 0;
+		font-size: var(--fs-subtitle-font-size);
+	}
+	.error :global(a) {
+		text-decoration: none;
+	}
+</style>
