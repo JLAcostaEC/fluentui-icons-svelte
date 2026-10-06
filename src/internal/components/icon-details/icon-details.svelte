@@ -54,7 +54,7 @@
 </script>
 
 <Card orientation="vertical" appearance={subtle ? 'subtle' : 'filled'}>
-	<div class="stage" aria-hidden="true">
+	<div class="stage">
 		<IconView name={icon.name} size={96} />
 	</div>
 
@@ -81,7 +81,7 @@
 						aria-label="Show {sibling.name}"
 						onclick={() => onselect(sibling)}
 					>
-						<IconView name={sibling.name} size={20} />
+						<IconView name={sibling.name} size={20} showRetry={false} />
 						<span class="sibling-label">{VARIANT_LABELS[sibling.variant]}</span>
 					</Button>
 				{/each}

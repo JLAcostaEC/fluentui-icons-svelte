@@ -32,13 +32,13 @@
 		"svg-icons"
 	],
 	"scripts": {
-		"dev": "vite dev",
+		"dev": "pnpm generate && vite dev",
 		"build": "pnpm generate && vite build && pnpm prepare",
 		"build:package": "pnpm generate && vite build && pnpm run prepack",
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync || echo ''",
 		"prepack": "svelte-kit sync && svelte-package && publint",
-		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+		"check": "pnpm generate && svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"format": "prettier --write .",
 		"lint": "prettier --check . && eslint .",

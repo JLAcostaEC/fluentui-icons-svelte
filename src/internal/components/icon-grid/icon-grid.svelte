@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { tick } from 'svelte';
 	import { INITIAL_ICON_COUNT } from '../../constants.js';
 	import type { IconRecord } from '../../types.js';
 	import IconTile from '../icon-tile/icon-tile.svelte';
@@ -54,6 +55,74 @@
 		if (!scroller) return;
 		firstRow = Math.floor(scroller.scrollTop / ROW_PITCH);
 		lastRow = Math.ceil((scroller.scrollTop + scroller.clientHeight) / ROW_PITCH);
+	}
+
+	async function focusIcon(index: number, backwards = false) {
+		if (!scroller) return;
+		const icon = icons[index];
+		const key = resetKey;
+		const top = Math.floor(index / columns) * ROW_PITCH;
+		if (top < scroller.scrollTop) scroller.scrollTop = top;
+		else if (top + ROW_HEIGHT > scroller.scrollTop + scroller.clientHeight) {
+			scroller.scrollTop = top + ROW_HEIGHT - scroller.clientHeight;
+		}
+		measure();
+		await tick();
+		if (resetKey !== key || icons[index] !== icon) return;
+		const tile = scroller?.querySelector<HTMLElement>(
+			`li[aria-posinset="${index + 1}"] .icon-tile`
+		);
+		// Shift+Tab enters the preceding tile at its last control, just like native tab order.
+		const controls = tile?.querySelectorAll<HTMLElement>('button:not(:disabled)');
+		const target = backwards && controls?.length ? controls[controls.length - 1] : tile;
+		target?.focus({ preventScroll: true });
+	}
+
+	function navigate(event: KeyboardEvent, index: number) {
+		if (event.altKey || event.ctrlKey || event.metaKey || event.defaultPrevented) return;
+		let next: number;
+		if (event.key === 'Tab') {
+			const tile = event.currentTarget as HTMLElement;
+			const controls = tile.querySelectorAll<HTMLElement>('button:not(:disabled)');
+			const lastControl = controls.length ? controls[controls.length - 1] : tile;
+			if (event.shiftKey) {
+				if (index !== start || event.target !== tile) return;
+				next = index - 1;
+			} else {
+				if (index !== end - 1 || event.target !== lastControl) return;
+				next = index + 1;
+			}
+			// Let Tab leave the catalog at either end.
+			if (next < 0 || next >= icons.length) return;
+		} else {
+			if (event.target !== event.currentTarget || event.shiftKey) return;
+			const page = Math.max(1, Math.floor(height / ROW_PITCH)) * columns;
+			switch (event.key) {
+				case 'ArrowRight':
+					next = index + 1;
+					break;
+				case 'ArrowLeft':
+					next = index - 1;
+					break;
+				case 'ArrowDown':
+					next = index + columns;
+					break;
+				case 'ArrowUp':
+					next = index - columns;
+					break;
+				case 'PageDown':
+					next = index + page;
+					break;
+				case 'PageUp':
+					next = index - page;
+					break;
+				default:
+					return;
+			}
+			next = Math.max(0, Math.min(icons.length - 1, next));
+		}
+		event.preventDefault();
+		void focusIcon(next, event.key === 'Tab' && event.shiftKey);
 	}
 
 	let frame = 0;
@@ -115,7 +184,12 @@
 		>
 			{#each visible as icon, index (icon.name)}
 				<li aria-setsize={icons.length} aria-posinset={start + index + 1}>
-					<IconTile {icon} selected={icon.name === selectedName} {onselect} />
+					<IconTile
+						{icon}
+						selected={icon.name === selectedName}
+						{onselect}
+						onkeydowncapture={(event) => navigate(event, start + index)}
+					/>
 				</li>
 			{/each}
 		</ul>

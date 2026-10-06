@@ -6,11 +6,13 @@
 	let {
 		icon,
 		selected,
-		onselect
+		onselect,
+		onkeydowncapture
 	}: {
 		icon: IconRecord;
 		selected: boolean;
 		onselect: (icon: IconRecord) => void;
+		onkeydowncapture?: (event: KeyboardEvent) => void;
 	} = $props();
 
 	const variantLabel = $derived(VARIANT_LABELS[icon.variant]);
@@ -28,6 +30,7 @@
 -->
 <Card
 	selectable
+	{onkeydowncapture}
 	appearance="filled"
 	orientation="vertical"
 	class="icon-tile"
