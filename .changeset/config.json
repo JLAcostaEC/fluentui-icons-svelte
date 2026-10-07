@@ -1,13 +1,10 @@
 {
-	"$schema": "https://unpkg.com/@changesets/config@2.3.0/schema.json",
+	"$schema": "https://unpkg.com/@changesets/config@3.0.3/schema.json",
 	"changelog": [
-		"@svitejs/changesets-changelog-github-compact",
-		{ "repo": "JLAcostaEC/fluentui-icons-svelte" }
+		"@changesets/changelog-github",
+		{ "repo": "JLAcostaEC/fluentui-icons-svelte", "template": "\n- {summary} {ref}" }
 	],
 	"commit": false,
-	"fixed": [],
-	"linked": [],
 	"access": "public",
-	"baseBranch": "main",
-	"ignore": []
+	"baseBranch": "main"
 }

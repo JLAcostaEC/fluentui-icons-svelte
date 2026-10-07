@@ -1,26 +1,36 @@
-@import 'tailwindcss';
+/*
+ * The site's orange, expressed as the RGB triplets fluentui-svelte derives its accent fills, text
+ * and focus colors from. Loaded after the library's theme.css so these win.
+ */
+:root {
+	--fs-accent-light-3: 254, 215, 170; /* #FED7AA */
+	--fs-accent-light-2: 253, 186, 116; /* #FDBA74 */
+	--fs-accent-light-1: 251, 146, 60; /* #FB923C */
+	--fs-accent-base: 234, 88, 12; /* #EA580C */
+	--fs-accent-dark-1: 194, 65, 12; /* #C2410C */
+	--fs-accent-dark-2: 154, 52, 18; /* #9A3412 */
+	--fs-accent-dark-3: 124, 45, 18; /* #7C2D12 */
 
-@theme {
-	--breakpoint-xs: 32.5rem;
+	--header-height: 3.5rem;
+	color-scheme: light;
 }
 
-* {
-	font-family:
-		'Segoe UI Variable Text', 'Seoge UI Variable Static Text', 'Segoe UI', 'Selawik',
-		'-apple-system', 'ui-sans-serif', 'system-ui', 'BlinkMacSystemFont', 'Roboto', 'Oxygen-Sans',
-		'Ubuntu', 'Cantarell', 'Helvetica Neue', 'sans-serif';
+html.dark {
+	color-scheme: dark;
+}
+
+body {
+	color: var(--fs-text-primary);
+	background: var(--fs-radial-mica-bg);
+	font-family: var(--fs-font-family-base);
 }
 
 #app {
-	width: 100%;
+	display: flex;
+	flex-direction: column;
 	min-height: 100dvh;
-	height: max-content;
-	display: grid;
-	grid-template-columns: 1fr;
-	grid-template-rows: max-content auto max-content;
-	position: relative;
 }
-svg {
-	width: 100%;
-	height: auto;
+
+#content {
+	flex: 1;
 }
