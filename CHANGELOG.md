@@ -1,5 +1,11 @@
 # fluentui-icons-svelte
 
+## 1.2.0
+
+### Minor Changes
+
+- feat: +3k icons added and new documentation page ([#10](https://github.com/JLAcostaEC/fluentui-icons-svelte/pull/10))
+
 ## 1.1.1
 
 ### Patch Changes
